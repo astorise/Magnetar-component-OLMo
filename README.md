@@ -29,3 +29,12 @@ and Hugging Face Transformers 4.57.1's `Olmo3ForCausalLM`. Model weights are
 not included.
 
 This repository contains a model component, not a hardware Provider. It is intended to be checked out by Magnetar at `components/olmo`.
+
+## License and WIT provenance
+
+This component is distributed under the [MIT License](LICENSE), copyright
+2026 Sébastien ASTORI. `wit/model-component-graph.wit` is copied from
+[Magnetar's model-component graph WIT](https://github.com/astorise/Magnetar/blob/2cf276990fd924bb91bf0eef792bb317024c0f8d/magnetar-runtime/wit/model-component-graph.wit)
+at commit `2cf276990fd924bb91bf0eef792bb317024c0f8d`; it is covered by the same
+MIT license and copyright notice. Its Git blob ID is
+`7039ea9a033a26d085989279dd9bc20d24483f51`.
