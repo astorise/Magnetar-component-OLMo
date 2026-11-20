@@ -5,10 +5,19 @@ name = "magnetar-component-olmo"
 version = "0.1.0"
 edition = "2024"
 license = "MIT"
-description = "Placeholder OLMo model families model component for Magnetar."
+description = "OLMo model graph Component for the Magnetar inference runtime."
 repository = "https://github.com/astorise/Magnetar-component-OLMo"
 readme = "README.md"
 rust-version = "1.98"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
+
+[features]
+bindings = []
+
+[dependencies]
+wit-bindgen = "0.63"
+
+[dev-dependencies]
+serde_json = "1"
