@@ -1,6 +1,9 @@
-//! Placeholder for the OLMo model families model component.
+//! OLMo 3 decoder graph construction for Magnetar.
 //!
-//! This crate does not yet implement model execution or Component Model exports.
+//! The host-independent graph plan is testable without a WebAssembly runtime.
+//! The WIT adapter is enabled for WebAssembly or the `bindings` feature.
 
-/// Planned model family identifier; this is not a claim of runtime support.
-pub const ARCHITECTURE_FAMILY: &str = "olmo";
+pub mod plan;
+
+#[cfg(any(target_arch = "wasm32", feature = "bindings"))]
+mod component;
