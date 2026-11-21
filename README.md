@@ -12,10 +12,10 @@ full attention uses YaRN. Integration tests inspect these graph contracts agains
 the pinned published checkpoint configuration and exercise unsupported inputs.
 
 The WIT entrypoints require the Runtime to supply a verified `silu` activation;
-missing or different activations are refused. The Magnetar repository includes
-a tiny independent numerical reference fixture, but production loading currently
-requires a pre-norm decoder tensor inventory and cannot yet load this graph.
-Real OLMo 3 checkpoints and GPU execution have not been qualified.
+missing or different activations are refused. The Magnetar repository compares
+a tiny full-attention checkpoint's prefill and cached-decode logits against an
+independent numerical reference. Real OLMo 3 checkpoints and GPU execution
+have not been qualified.
 
 ## Work required
 
