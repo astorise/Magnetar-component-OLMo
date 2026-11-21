@@ -13,8 +13,9 @@ the pinned published checkpoint configuration and exercise unsupported inputs.
 
 The WIT entrypoints require the Runtime to supply a verified `silu` activation;
 missing or different activations are refused. The Magnetar repository includes
-a tiny independent numerical reference fixture. Real OLMo 3 checkpoints and GPU
-execution have not yet been qualified with this Component.
+a tiny independent numerical reference fixture, but production loading currently
+requires a pre-norm decoder tensor inventory and cannot yet load this graph.
+Real OLMo 3 checkpoints and GPU execution have not been qualified.
 
 ## Work required
 
