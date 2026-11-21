@@ -11,18 +11,15 @@ For the published OLMo 3 checkpoint, sliding attention uses ordinary RoPE and
 full attention uses YaRN. Integration tests inspect these graph contracts against
 the pinned published checkpoint configuration and exercise unsupported inputs.
 
-**Inference is not available yet.** The WIT entrypoints deliberately fail
-closed: the runtime cannot yet report the checkpoint's configurable
-`hidden_act`, so emitting a fixed SiLU graph could silently execute a different
-checkpoint incorrectly. This is tracked in
-[Magnetar #217](https://github.com/astorise/Magnetar/issues/217). The existing
-tests do not compare logits or execute the graph on a Provider.
+The WIT entrypoints require the Runtime to supply a verified `silu` activation;
+missing or different activations are refused. The Magnetar repository includes
+a tiny independent numerical reference fixture. Real OLMo 3 checkpoints and GPU
+execution have not yet been qualified with this Component.
 
 ## Work required
 
-After the activation contract is available, add real loading, runtime graph
-execution and independent reference-logit tests for an explicitly pinned
-checkpoint. Verify other OLMo versions separately: their semantics differ.
+Qualify real checkpoint loading and execution, including mixed attention and
+YaRN. Verify other OLMo versions separately: their semantics differ.
 
 The graph is based on the [OLMo 3 7B Instruct configuration](https://huggingface.co/allenai/Olmo-3-7B-Instruct)
 and Hugging Face Transformers 4.57.1's `Olmo3ForCausalLM`. Model weights are
@@ -34,7 +31,5 @@ This repository contains a model component, not a hardware Provider. It is inten
 
 This component is distributed under the [MIT License](LICENSE), copyright
 2026 Sébastien ASTORI. `wit/model-component-graph.wit` is copied from
-[Magnetar's model-component graph WIT](https://github.com/astorise/Magnetar/blob/2cf276990fd924bb91bf0eef792bb317024c0f8d/magnetar-runtime/wit/model-component-graph.wit)
-at commit `2cf276990fd924bb91bf0eef792bb317024c0f8d`; it is covered by the same
-MIT license and copyright notice. Its Git blob ID is
-`7039ea9a033a26d085989279dd9bc20d24483f51`.
+[Magnetar's model-component graph WIT](https://github.com/astorise/Magnetar/blob/main/magnetar-runtime/wit/model-component-graph.wit),
+version 1.8.0. It is covered by the same MIT license and copyright notice.

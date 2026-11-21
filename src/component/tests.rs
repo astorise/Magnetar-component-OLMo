@@ -1,8 +1,9 @@
-use super::require_activation_contract;
+use super::validate_activation;
 
 #[test]
-fn refuses_to_publish_a_graph_when_host_cannot_report_the_activation() {
-    let error = require_activation_contract().unwrap_err();
-    assert!(error.contains("hidden_act"));
-    assert!(error.contains("#217"));
+fn requires_the_supported_declared_activation() {
+    assert_eq!(validate_activation(Some("silu".into())).unwrap(), "silu");
+    assert!(validate_activation(None).is_err());
+    assert!(validate_activation(Some("gelu".into())).is_err());
+    assert!(validate_activation(Some("".into())).is_err());
 }

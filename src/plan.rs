@@ -177,6 +177,7 @@ struct Builder<'a, S> {
     config: &'a Config,
     sequence: u64,
     append: bool,
+    position_offset: i64,
 }
 
 impl<S: GraphSink> Builder<'_, S> {
@@ -265,7 +266,7 @@ impl<S: GraphSink> Builder<'_, S> {
             attr("dimension", Value::Int(layer.head_dimension as i64)),
             attr("position_mode", Value::Text("sequential".into())),
             attr("rotation_pairing", Value::Text("half_split".into())),
-            attr("position_offset", Value::Int(0)),
+            attr("position_offset", Value::Int(self.position_offset)),
             attr("head_count", Value::Int(heads as i64)),
         ];
         // OLMo3 constructs its sliding-attention rotary embedding with the
@@ -422,6 +423,7 @@ pub fn build_graph<S: GraphSink>(
 ) -> Result<String, String> {
     config.validate()?;
     if segment.sequence_length == 0
+        || segment.position_offset > i64::MAX as u64
         || segment.start_layer > segment.end_layer
         || segment.end_layer as usize > config.layers.len()
         || (segment.phase == Phase::Decode && segment.sequence_length != 1)
@@ -438,6 +440,7 @@ pub fn build_graph<S: GraphSink>(
         config,
         sequence: segment.sequence_length,
         append: segment.phase == Phase::Decode,
+        position_offset: segment.position_offset as i64,
     };
     let mut hidden = if segment.start_layer == 0 {
         let ids = b

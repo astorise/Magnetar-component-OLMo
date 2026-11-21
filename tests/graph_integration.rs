@@ -256,6 +256,14 @@ fn middle_segment_uses_hidden_input_and_does_not_emit_logits() {
     let mut sink = RecordingSink::default();
     build_graph(&mut sink, &config, segment(Phase::Decode, 1, 2)).unwrap();
     assert_eq!(sink.begin, Some((Phase::Decode, 1, 11)));
+    assert_eq!(
+        attribute(sink.node("layer1.rope_q"), "position_offset"),
+        Some(&Value::Int(11))
+    );
+    assert_eq!(
+        attribute(sink.node("layer1.rope_k"), "position_offset"),
+        Some(&Value::Int(11))
+    );
     assert_eq!(sink.inputs, ["hidden_states_in"]);
     assert_eq!(
         sink.node("layer1.q_proj").inputs[0],

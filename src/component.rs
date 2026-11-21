@@ -83,6 +83,7 @@ fn wit_attr(attr: &Attr) -> gb::Attribute {
 
 fn config() -> Result<Config, String> {
     let a = mc::model_config();
+    let hidden_activation = validate_activation(mc::hidden_activation())?;
     if a.num_hidden_layers == 0 || a.num_hidden_layers > 4096 {
         return Err("invalid or excessive decoder layer count".into());
     }
@@ -161,9 +162,7 @@ fn config() -> Result<Config, String> {
         heads: a.num_attention_heads,
         vocabulary: a.vocabulary_size,
         epsilon: a.rms_norm_eps,
-        // Unreachable through WIT until the activation guard above is replaced
-        // with the checkpoint value supplied by the host (Magnetar #217).
-        hidden_activation: "silu".into(),
+        hidden_activation,
         tie_embeddings: a.tie_word_embeddings,
         layers,
         yarn,
@@ -176,7 +175,6 @@ fn build(
     position_offset: u64,
     range: Option<(u32, u32)>,
 ) -> String {
-    require_activation_contract().unwrap_or_else(|reason| panic!("olmo3: {reason}"));
     let config = config().unwrap_or_else(|reason| panic!("olmo3: {reason}"));
     let (start_layer, end_layer) = range.unwrap_or((0, config.layers.len() as u32));
     plan::build_graph(
@@ -193,10 +191,13 @@ fn build(
     .unwrap_or_else(|reason| panic!("olmo3: {reason}"))
 }
 
-/// Do not emit a SiLU graph when the host has not authorized the actual
-/// checkpoint activation. The current WIT contract cannot report it.
-fn require_activation_contract() -> Result<(), &'static str> {
-    Err("model-config does not expose hidden_act; blocked by Magnetar issue #217")
+/// Refuse a graph unless ingestion established the activation it uses.
+fn validate_activation(value: Option<String>) -> Result<String, String> {
+    match value.as_deref() {
+        Some("silu") => Ok("silu".into()),
+        Some(other) => Err(format!("unsupported checkpoint activation {other:?}")),
+        None => Err("checkpoint activation is unknown".into()),
+    }
 }
 
 struct Component;
