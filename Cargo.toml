@@ -22,7 +22,7 @@ bindings = []
 magnetar-component-sdk = { git = "https://github.com/astorise/magnetar-component-sdk", rev = "4e2e556176f465aa8d271259104de9e2f5aefdfa" }
 # The contract: pinned by commit while the crate is in development, and the
 # feature names the contract version this Component targets.
-magnetar-component-api = { git = "https://github.com/astorise/magnetar-component-api", rev = "2383a7479ff496b147e27e294f3190d5209b39d4", features = ["v1_8"] }
+magnetar-component-api = { git = "https://github.com/astorise/magnetar-component-api", rev = "62f5c10989d4b601cbd7ea2c8bc3e5df92477add", features = ["v1_8"] }
 
 [dev-dependencies]
 serde_json = "1"

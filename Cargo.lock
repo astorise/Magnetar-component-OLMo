@@ -91,7 +91,7 @@ dependencies = [
 [[package]]
 name = "magnetar-component-api"
 version = "0.1.0"
-source = "git+https://github.com/astorise/magnetar-component-api?rev=2383a7479ff496b147e27e294f3190d5209b39d4#2383a7479ff496b147e27e294f3190d5209b39d4"
+source = "git+https://github.com/astorise/magnetar-component-api?rev=62f5c10989d4b601cbd7ea2c8bc3e5df92477add#62f5c10989d4b601cbd7ea2c8bc3e5df92477add"
 dependencies = [
  "wit-bindgen",
 ]
