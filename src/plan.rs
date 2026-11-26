@@ -5,60 +5,9 @@
 //! feed-forward sublayer before adding the residual. This is different from
 //! both a Llama pre-norm block and Gemma's per-head Q/K normalization.
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum Phase {
-    Prefill,
-    Decode,
-}
-
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum KvRole {
-    K,
-    V,
-}
-
-#[derive(Clone, Debug, PartialEq)]
-pub enum Value {
-    Bool(bool),
-    Int(i64),
-    Float(f64),
-    Text(String),
-}
-
-#[derive(Clone, Debug, PartialEq)]
-pub struct Attr {
-    pub name: &'static str,
-    pub value: Value,
-}
-
-#[derive(Clone, Debug, PartialEq)]
-pub struct Kv {
-    pub resource: String,
-    pub role: KvRole,
-    pub append: bool,
-}
-
-#[derive(Clone, Debug, PartialEq)]
-pub struct Node {
-    pub id: String,
-    pub operator: &'static str,
-    pub family: &'static str,
-    pub attrs: Vec<Attr>,
-    pub inputs: Vec<String>,
-    pub shape: Vec<u64>,
-    pub kv: Option<Kv>,
-}
-
-/// Subset of the graph-builder capability needed by OLMo.
-pub trait GraphSink {
-    fn begin_graph(&mut self, phase: Phase, sequence_length: u64, position_offset: u64);
-    fn declare_input(&mut self, name: &str, shape: &[u64]) -> String;
-    fn weight_edge(&mut self, name: &str) -> String;
-    fn alias_weight_edge(&mut self, edge: &str, target: &str);
-    fn kv_resource(&mut self, layer: u64, role: KvRole) -> String;
-    fn add_node(&mut self, node: Node) -> String;
-    fn finish_graph(&mut self, output: &str) -> String;
-}
+/// The graph IR and the sink the builder writes to are the SDK's: the same
+/// types every Model Component builds its graph with.
+pub use magnetar_component_sdk::graph::{Attr, GraphSink, Kv, KvRole, Node, Phase, Value};
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Yarn {
@@ -169,7 +118,7 @@ pub struct Segment {
 }
 
 fn attr(name: &'static str, value: Value) -> Attr {
-    Attr { name, value }
+    Attr::new(name, value)
 }
 
 struct Builder<'a, S> {
